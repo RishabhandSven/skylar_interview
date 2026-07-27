@@ -22,12 +22,12 @@ export const ChartCard: React.FC = () => {
   };
 
   return (
-    <div className="p-6 border border-border bg-surface rounded-md shadow-sm h-[300px] flex flex-col">
-      <h4 className="font-display font-semibold text-xs tracking-wide text-text-secondary uppercase mb-6">
+    <div className="p-4 sm:p-6 border border-border bg-surface rounded-md shadow-sm min-h-[280px] flex flex-col w-full min-w-0">
+      <h4 className="font-display font-semibold text-xs tracking-wide text-text-secondary uppercase mb-4 shrink-0">
         Pipeline Growth Curve
       </h4>
 
-      <div className="flex-1 w-full h-full min-h-0">
+      <div className="flex-1 w-full min-h-[220px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={mockChartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
             <defs>

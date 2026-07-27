@@ -16,7 +16,7 @@ export const BusinessHealthGauge: React.FC<BusinessHealthGaugeProps> = ({
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="p-6 border border-border bg-surface rounded-md shadow-sm flex flex-col items-center justify-center h-auto min-h-[240px] w-full">
+    <div className="p-6 border border-border bg-surface rounded-md shadow-sm flex flex-col items-center w-full min-w-0">
       <h4 className="font-display font-semibold text-xs tracking-wide text-text-secondary uppercase mb-4 self-start">
         {label}
       </h4>

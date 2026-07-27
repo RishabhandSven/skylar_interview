@@ -40,7 +40,7 @@ export const InsightCard: React.FC<InsightCardProps> = ({ type, items }) => {
   };
 
   return (
-    <div className="p-6 border border-border bg-surface rounded-md shadow-sm h-auto min-h-0 w-full flex flex-col">
+    <div className="p-6 border border-border bg-surface rounded-md shadow-sm w-full min-w-0 flex flex-col">
       {/* Header */}
       <div className="flex items-center gap-2 pb-4 mb-4 border-b border-border">
         {getHeaderIcon()}
@@ -55,16 +55,16 @@ export const InsightCard: React.FC<InsightCardProps> = ({ type, items }) => {
           <p className="text-sm">No items identified by AI</p>
         </div>
       ) : (
-        <ul className="space-y-4 flex-1">
+        <ul className="space-y-4">
           {items.map((item) => (
-            <li key={item.id} className="flex items-start gap-3 min-h-0">
+            <li key={item.id} className="flex items-start gap-3 min-w-0">
               <div className={`w-1.5 h-1.5 rounded-full mt-2 shrink-0 ${isRisk ? 'bg-danger' : 'bg-success'}`} />
               <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h5 className="font-sans font-semibold text-sm text-text-primary break-words">
+                <div className="flex flex-wrap items-start gap-2">
+                  <h5 className="font-sans font-semibold text-sm text-text-primary break-words leading-snug">
                     {item.title}
                   </h5>
-                  {isRisk && getLevelBadge(item.level)}
+                  {isRisk && <span className="shrink-0">{getLevelBadge(item.level)}</span>}
                 </div>
                 <p className="font-sans text-xs text-text-secondary mt-1 leading-relaxed break-words whitespace-pre-wrap">
                   {item.description}

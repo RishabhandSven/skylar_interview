@@ -11,13 +11,13 @@ export const ExecutiveSummaryCard: React.FC<ExecutiveSummaryCardProps> = ({
   onExploreAction,
 }) => {
   return (
-    <div className="p-6 border border-border bg-surface rounded-md shadow-sm relative overflow-hidden flex flex-col justify-between h-auto min-h-0 w-full">
+    <div className="p-6 border border-border bg-surface rounded-md shadow-sm relative flex flex-col w-full min-w-0">
       {/* Decorative Brand Top Banner */}
       <div className="absolute top-0 left-0 w-full h-[3px] bg-gradient-to-r from-brand via-success to-brand" />
 
-      <div>
+      <div className="min-w-0">
         <div className="flex items-center gap-2 text-brand mb-4">
-          <Sparkles className="w-5 h-5 animate-pulse" />
+          <Sparkles className="w-5 h-5 animate-pulse shrink-0" />
           <h4 className="font-display font-semibold text-sm tracking-wide uppercase">
             AI Executive Overview
           </h4>

@@ -62,20 +62,20 @@ export const MetricCard: React.FC<MetricCardProps> = ({
     <motion.div
       whileHover={{ y: -4, scale: 1.01 }}
       transition={{ duration: 0.2, ease: 'easeInOut' }}
-      className="p-5 border border-border bg-surface rounded-md shadow-sm hover:shadow-md flex flex-col justify-between h-full min-h-[140px] w-full relative overflow-hidden"
+      className="p-5 border border-border bg-surface rounded-md shadow-sm hover:shadow-md flex flex-col h-full min-h-[140px] w-full min-w-0 relative"
     >
-      <div>
+      <div className="min-w-0">
         <p className="font-display font-medium text-xs text-text-secondary uppercase tracking-wider">
           {title}
         </p>
-        <h3 className="font-display font-bold text-2xl mt-2 text-text-primary leading-tight break-all">
+        <h3 className="font-display font-bold text-xl sm:text-2xl mt-2 text-text-primary leading-tight break-words">
           {value}
         </h3>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 mt-4">
+      <div className="mt-auto pt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         {/* Trend Indicator */}
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 min-w-0">
           {trendValue && (
             <span className={`flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold ${getTrendColor()}`}>
               {getTrendIcon()}
@@ -90,7 +90,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
         </div>
 
         {/* Sparkline Visualization */}
-        <svg className="w-[100px] h-[35px]" viewBox="0 0 120 40">
+        <svg className="w-[100px] h-[35px] shrink-0 self-end" viewBox="0 0 120 40">
           <motion.path
             initial={{ pathLength: 0 }}
             animate={{ pathLength: 1 }}

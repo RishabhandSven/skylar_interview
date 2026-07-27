@@ -9,9 +9,9 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({ variant, count
   const shimmerClass = "animate-pulse bg-border/60 dark:bg-border/30 rounded-md";
 
   const renderMetric = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 w-full">
+    <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 w-full items-stretch">
       {Array.from({ length: count }).map((_, idx) => (
-        <div key={idx} className="p-5 border border-border bg-surface rounded-md h-[120px] flex flex-col justify-between">
+        <div key={idx} className="p-5 border border-border bg-surface rounded-md min-h-[140px] flex flex-col justify-between">
           <div className="space-y-2">
             <div className={`h-3 w-1/3 ${shimmerClass}`} />
             <div className={`h-7 w-2/3 ${shimmerClass}`} />
@@ -26,7 +26,7 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({ variant, count
   );
 
   const renderSummary = () => (
-    <div className="p-6 border border-border bg-surface rounded-md h-full space-y-4">
+    <div className="p-6 border border-border bg-surface rounded-md w-full min-w-0 space-y-4">
       <div className="flex items-center gap-2">
         <div className={`h-5 w-5 rounded-full ${shimmerClass}`} />
         <div className={`h-4 w-1/4 ${shimmerClass}`} />
@@ -42,9 +42,9 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({ variant, count
   );
 
   const renderChart = () => (
-    <div className="p-6 border border-border bg-surface rounded-md h-[300px] flex flex-col justify-between">
+    <div className="p-6 border border-border bg-surface rounded-md min-h-[280px] flex flex-col justify-between w-full min-w-0">
       <div className={`h-4 w-1/4 ${shimmerClass}`} />
-      <div className="flex items-end justify-between h-[200px] px-4">
+      <div className="flex items-end justify-between min-h-[220px] px-4">
         <div className={`h-[40%] w-[10%] ${shimmerClass}`} />
         <div className={`h-[75%] w-[10%] ${shimmerClass}`} />
         <div className={`h-[60%] w-[10%] ${shimmerClass}`} />
@@ -56,7 +56,7 @@ export const LoadingSkeleton: React.FC<LoadingSkeletonProps> = ({ variant, count
   );
 
   const renderList = () => (
-    <div className="p-6 border border-border bg-surface rounded-md h-full space-y-4">
+    <div className="p-6 border border-border bg-surface rounded-md w-full min-w-0 space-y-4">
       <div className={`h-4 w-1/3 ${shimmerClass}`} />
       <div className="space-y-3 mt-4">
         {Array.from({ length: 4 }).map((_, idx) => (

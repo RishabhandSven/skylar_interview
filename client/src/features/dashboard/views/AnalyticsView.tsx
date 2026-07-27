@@ -14,7 +14,7 @@ export const AnalyticsView: React.FC = () => {
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="space-y-6"
+      className="space-y-4 sm:space-y-6 min-w-0"
     >
       {/* Header */}
       <div>
@@ -30,12 +30,12 @@ export const AnalyticsView: React.FC = () => {
       <ChartCard />
 
       {/* Deals Table Card */}
-      <div className="p-6 border border-border bg-surface rounded-md shadow-sm">
+      <div className="p-4 sm:p-6 border border-border bg-surface rounded-md shadow-sm w-full min-w-0">
         <h4 className="font-display font-semibold text-xs tracking-wide text-text-secondary uppercase mb-4">
           Pipeline Deals Catalog
         </h4>
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs font-sans">
+        <div className="overflow-x-auto -mx-1 px-1">
+          <table className="w-full min-w-[640px] text-left text-xs font-sans">
             <thead>
               <tr className="border-b border-border text-text-secondary pb-2">
                 <th className="py-2.5 font-semibold">Deal Name</th>

@@ -28,7 +28,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({ items })
   };
 
   return (
-    <div className="p-6 border border-border bg-surface rounded-md shadow-sm h-auto min-h-0 w-full flex flex-col">
+    <div className="p-6 border border-border bg-surface rounded-md shadow-sm w-full min-w-0 flex flex-col">
       {/* Header */}
       <div className="flex items-center gap-2 pb-4 mb-4 border-b border-border">
         <Lightbulb className="w-5 h-5 text-warning" />
@@ -43,20 +43,20 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({ items })
           <p className="text-sm">No action recommendations available</p>
         </div>
       ) : (
-        <div className="space-y-4 flex-1">
+        <div className="space-y-4">
           {items.map((item) => (
             <div
               key={item.id}
-              className="p-4 border border-border bg-background rounded-md flex flex-col lg:flex-row lg:items-center justify-between gap-4 min-h-0"
+              className="p-4 border border-border bg-background rounded-md flex flex-col sm:flex-row sm:items-start justify-between gap-4 min-w-0"
             >
               <div className="flex-1 min-w-0">
-                <div className="flex flex-wrap items-center gap-2">
-                  <h5 className="font-sans font-semibold text-sm text-text-primary break-words">
+                <div className="flex flex-wrap items-start gap-2">
+                  <h5 className="font-sans font-semibold text-sm text-text-primary break-words leading-snug">
                     {item.title}
                   </h5>
-                  {getPriorityBadge(item.priority)}
+                  <span className="shrink-0">{getPriorityBadge(item.priority)}</span>
                 </div>
-                <p className="font-sans text-xs text-text-secondary mt-1 leading-relaxed break-words whitespace-pre-wrap">
+                <p className="font-sans text-xs text-text-secondary mt-1.5 leading-relaxed break-words whitespace-pre-wrap">
                   {item.description}
                 </p>
               </div>
@@ -64,7 +64,7 @@ export const RecommendationCard: React.FC<RecommendationCardProps> = ({ items })
               {item.actionLabel && (
                 <motion.button
                   whileTap={{ scale: 0.97 }}
-                  className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-brand text-white font-medium text-xs shadow-sm hover:shadow-brand-glow transition-all self-start md:self-auto"
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-md bg-brand text-white font-medium text-xs shadow-sm hover:shadow-brand-glow transition-all shrink-0 self-start"
                 >
                   <span>{item.actionLabel}</span>
                   <ExternalLink className="w-3.5 h-3.5" />

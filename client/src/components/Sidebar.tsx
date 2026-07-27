@@ -22,7 +22,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) =
     <motion.aside
       animate={{ width: isCollapsed ? '72px' : '240px' }}
       transition={{ type: 'spring', stiffness: 300, damping: 25 }}
-      className="relative flex flex-col h-screen border-r border-border bg-surface text-text-primary z-20 shrink-0"
+      className="relative flex flex-col h-full min-h-0 border-r border-border bg-surface text-text-primary z-20 shrink-0 overflow-hidden"
     >
       {/* Brand Header */}
       <div className="flex items-center h-16 px-4 border-b border-border gap-3">
