@@ -22,13 +22,13 @@ function App() {
           {(currentTab) => {
             switch (currentTab) {
               case 'overview':
-                return <OverviewView />;
+                return <OverviewView key="overview" />;
               case 'analytics':
-                return <AnalyticsView />;
+                return <AnalyticsView key="analytics" />;
               case 'settings':
-                return <SettingsView />;
+                return <SettingsView key="settings" />;
               default:
-                return <OverviewView />;
+                return <OverviewView key="overview-default" />;
             }
           }}
         </DashboardLayout>

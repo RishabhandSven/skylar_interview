@@ -1,25 +1,41 @@
-import React from 'react';
+import { memo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
+import type { ChartPoint } from '../../../types/insights';
+import { EmptyState } from './EmptyState';
 
-const mockChartData = [
-  { name: 'Jan', value: 4000000 },
-  { name: 'Feb', value: 5000000 },
-  { name: 'Mar', value: 4500000 },
-  { name: 'Apr', value: 6000000 },
-  { name: 'May', value: 7500000 },
-  { name: 'Jun', value: 8500000 },
-  { name: 'Jul', value: 10000000 },
-];
+interface ChartCardProps {
+  data: ChartPoint[];
+}
 
-export const ChartCard: React.FC = () => {
+export const ChartCard = memo(function ChartCard({ data }: ChartCardProps) {
   const formatYAxis = (tickItem: number) => {
-    return `$${(tickItem / 1000000).toFixed(1)}M`;
+    if (tickItem >= 1_000_000) {
+      return `$${(tickItem / 1_000_000).toFixed(1)}M`;
+    }
+    if (tickItem >= 1_000) {
+      return `$${(tickItem / 1_000).toFixed(0)}K`;
+    }
+    return `$${tickItem}`;
   };
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const formatTooltip = (value: any) => {
     return [`$${Number(value).toLocaleString()}`, 'Pipeline Value'] as [string, string];
   };
+
+  if (data.length === 0) {
+    return (
+      <div className="p-4 sm:p-6 border border-border bg-surface rounded-md shadow-sm min-h-[280px] flex flex-col w-full min-w-0">
+        <h4 className="font-display font-semibold text-xs tracking-wide text-text-secondary uppercase mb-4 shrink-0">
+          Pipeline Growth Curve
+        </h4>
+        <EmptyState
+          title="No chart data available"
+          message="Pipeline metrics were not detected in the current AI insight response."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 sm:p-6 border border-border bg-surface rounded-md shadow-sm min-h-[280px] flex flex-col w-full min-w-0">
@@ -29,7 +45,7 @@ export const ChartCard: React.FC = () => {
 
       <div className="flex-1 w-full min-h-[220px]">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={mockChartData} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
+          <AreaChart data={data} margin={{ top: 5, right: 5, left: -20, bottom: 0 }}>
             <defs>
               <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor="var(--brand)" stopOpacity={0.2}/>
@@ -74,4 +90,4 @@ export const ChartCard: React.FC = () => {
       </div>
     </div>
   );
-};
+});

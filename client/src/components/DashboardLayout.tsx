@@ -1,22 +1,27 @@
 import React, { useState } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { Sidebar } from './Sidebar';
 import { Navbar } from './Navbar';
+import { INSIGHTS_QUERY_KEY } from '../hooks/useInsights';
 
 interface DashboardLayoutProps {
   children: (currentTab: string, onSyncTrigger: () => void, isSyncing: boolean, syncTime: Date | null) => React.ReactNode;
 }
 
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
+  const queryClient = useQueryClient();
   const [currentTab, setCurrentTab] = useState('overview');
   const [isSyncing, setIsSyncing] = useState(false);
-  const [syncTime, setSyncTime] = useState<Date | null>(new Date());
+  const [syncTime, setSyncTime] = useState<Date | null>(null);
 
-  const handleSync = () => {
+  const handleSync = async () => {
     setIsSyncing(true);
-    setTimeout(() => {
-      setIsSyncing(false);
+    try {
+      await queryClient.refetchQueries({ queryKey: INSIGHTS_QUERY_KEY });
       setSyncTime(new Date());
-    }, 1500); // simulate API synchronization
+    } finally {
+      setIsSyncing(false);
+    }
   };
 
   return (
