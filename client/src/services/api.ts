@@ -12,7 +12,31 @@ export const apiClient = axios.create({
   },
 });
 
+function createApiError(message: string, status = 0): ApiError {
+  const apiError = new Error(message) as ApiError;
+  apiError.status = status;
+  return apiError;
+}
+
+function isInsightResponse(data: unknown): data is InsightResponse {
+  if (!data || typeof data !== 'object') {
+    return false;
+  }
+
+  const response = data as Record<string, unknown>;
+  return (
+    typeof response.executiveSummary === 'string' &&
+    typeof response.risks === 'string' &&
+    typeof response.opportunities === 'string' &&
+    typeof response.recommendations === 'string'
+  );
+}
+
 function toApiError(error: unknown): ApiError {
+  if (error && typeof error === 'object' && 'status' in error) {
+    return error as ApiError;
+  }
+
   if (isAxiosError(error)) {
     const axiosError = error as AxiosError<ApiErrorBody>;
     const apiError = new Error(
@@ -35,14 +59,18 @@ function toApiError(error: unknown): ApiError {
     return apiError;
   }
 
-  const fallback = new Error('An unexpected error occurred while fetching insights') as ApiError;
-  fallback.status = 0;
-  return fallback;
+  return createApiError(
+    error instanceof Error ? error.message : 'An unexpected error occurred while fetching insights',
+  );
 }
 
 export async function fetchInsights(): Promise<InsightResponse> {
   try {
     const { data } = await apiClient.get<InsightResponse>('/api/insights');
+    if (!isInsightResponse(data)) {
+      throw createApiError('The API returned an invalid insights response.', 422);
+    }
+
     return data;
   } catch (error) {
     throw toApiError(error);
@@ -72,6 +100,8 @@ export function getErrorTitle(error: unknown): string {
       return 'Bad Gateway — downstream service unavailable';
     case 500:
       return 'Server error generating insights';
+    case 422:
+      return 'Invalid API response';
     case 0:
       return 'Unable to reach the API server';
     default:

@@ -7,7 +7,7 @@ interface MetricCardProps {
   changeText?: string;
   trend: 'up' | 'down' | 'neutral';
   trendValue?: string;
-  sparklineData?: number[];
+  sparklineData: number[];
 }
 
 export const MetricCard: React.FC<MetricCardProps> = ({
@@ -16,7 +16,7 @@ export const MetricCard: React.FC<MetricCardProps> = ({
   changeText,
   trend,
   trendValue,
-  sparklineData = [30, 45, 35, 50, 40, 60, 55],
+  sparklineData,
 }) => {
   const getTrendIcon = () => {
     switch (trend) {

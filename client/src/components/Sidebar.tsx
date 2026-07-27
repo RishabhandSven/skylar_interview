@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { LayoutDashboard, BarChart3, Settings, ChevronLeft, ChevronRight, Briefcase } from 'lucide-react';
+import { LayoutDashboard, BarChart3, Settings, ChevronLeft, ChevronRight, Briefcase, Sparkles } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 interface SidebarProps {
@@ -15,6 +15,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ currentTab, setCurrentTab }) =
   const menuItems = [
     { id: 'overview', name: 'Overview', icon: LayoutDashboard },
     { id: 'analytics', name: 'Analytics', icon: BarChart3 },
+    { id: 'advisor', name: 'AI Advisor', icon: Sparkles },
     { id: 'settings', name: 'Settings', icon: Settings },
   ];
 

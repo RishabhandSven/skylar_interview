@@ -12,6 +12,7 @@ import {
   extractCount,
   extractPercentage,
   formatCurrency,
+  normalizeInsightText,
   parseCurrency,
   parseOpportunityItems,
   parseRecommendationItems,
@@ -179,24 +180,28 @@ function isResponseEmpty(response: InsightResponse): boolean {
 }
 
 export function transformInsightsResponse(response: InsightResponse): DashboardInsights {
+  const executiveSummary = normalizeInsightText(response.executiveSummary ?? '');
+  const risksText = normalizeInsightText(response.risks ?? '');
+  const opportunitiesText = normalizeInsightText(response.opportunities ?? '');
+  const recommendationsText = normalizeInsightText(response.recommendations ?? '');
   const combinedText = [
-    response.executiveSummary,
-    response.risks,
-    response.opportunities,
-    response.recommendations,
+    executiveSummary,
+    risksText,
+    opportunitiesText,
+    recommendationsText,
   ]
     .filter(Boolean)
     .join('\n');
 
-  const risks = parseRiskItems(response.risks ?? '');
-  const opportunities = parseOpportunityItems(response.opportunities ?? '');
-  const recommendations = parseRecommendationItems(response.recommendations ?? '');
+  const risks = parseRiskItems(risksText);
+  const opportunities = parseOpportunityItems(opportunitiesText);
+  const recommendations = parseRecommendationItems(recommendationsText);
   const pipelineValue = extractPipelineValue(combinedText);
   const completion = extractCompletionPercentage(combinedText);
 
   return {
-    executiveSummary: response.executiveSummary?.trim() ?? '',
-    aiBannerSnippet: extractAiBannerSnippet(response.executiveSummary ?? ''),
+    executiveSummary,
+    aiBannerSnippet: extractAiBannerSnippet(executiveSummary),
     risks,
     opportunities,
     recommendations,

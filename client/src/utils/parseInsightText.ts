@@ -1,47 +1,102 @@
 import type { InsightItem } from '../features/dashboard/components/InsightCard';
 import type { RecommendationItem } from '../features/dashboard/components/RecommendationCard';
 
-const BULLET_PATTERN = /^[-*•]\s+/;
-const NUMBERED_PATTERN = /^\d+[.)]\s+/;
+const BULLET_PATTERN = /^(?:[-*+]|\u2022)\s+/;
+const NUMBERED_PATTERN = /^(\d+)[.)]\s+/;
+const HEADING_PATTERN = /^#{1,6}\s+(.+)$/;
+const HORIZONTAL_RULE_PATTERN = /^(?:-{3,}|_{3,}|\*{3,})$/;
 
-function stripListPrefix(line: string): string {
-  return line.replace(BULLET_PATTERN, '').replace(NUMBERED_PATTERN, '').trim();
+function normalizeInlineMarkdown(text: string): string {
+  return text
+    .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]*\)/g, '$1')
+    .replace(/(`{1,3})(.*?)\1/g, '$2')
+    .replace(/(\*\*|__)(.+?)\1/g, '$2')
+    .replace(/(^|\s)[*_](.+?)[*_](?=\s|$|[.,;:!?])/g, '$1$2')
+    .replace(/\s+/g, ' ')
+    .trim();
 }
 
-function isListLine(line: string): boolean {
-  return BULLET_PATTERN.test(line) || NUMBERED_PATTERN.test(line);
+function getListItem(line: string): { text: string } | null {
+  const numberedMatch = line.match(NUMBERED_PATTERN);
+  if (numberedMatch) {
+    return { text: `${numberedMatch[1]}. ${line.slice(numberedMatch[0].length)}` };
+  }
+
+  if (BULLET_PATTERN.test(line)) {
+    return { text: line.replace(BULLET_PATTERN, '') };
+  }
+
+  return null;
+}
+
+export function normalizeInsightText(text: string): string {
+  return text
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => !HORIZONTAL_RULE_PATTERN.test(line))
+    .map((line) => {
+      const headingMatch = line.match(HEADING_PATTERN);
+      if (headingMatch) return normalizeInlineMarkdown(headingMatch[1]);
+
+      const listItem = getListItem(line);
+      if (listItem) return normalizeInlineMarkdown(listItem.text);
+
+      return normalizeInlineMarkdown(line.replace(/^>\s?/, ''));
+    })
+    .filter(Boolean)
+    .join('\n');
 }
 
 export function splitIntoSegments(text: string): string[] {
-  const trimmed = text.trim();
+  const trimmed = normalizeInsightText(text);
   if (!trimmed) return [];
 
-  const lines = trimmed.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
   const segments: string[] = [];
   let current = '';
+  let pendingHeading = '';
 
-  for (const line of lines) {
-    if (isListLine(line) && current) {
+  const lines = text
+    .replace(/\r\n?/g, '\n')
+    .split('\n')
+    .map((line) => line.trim())
+    .filter((line) => line && !HORIZONTAL_RULE_PATTERN.test(line));
+
+  for (const rawLine of lines) {
+    const headingMatch = rawLine.match(HEADING_PATTERN);
+    if (headingMatch) {
+      if (current) {
+        segments.push(current.trim());
+        current = '';
+      }
+      pendingHeading = normalizeInlineMarkdown(headingMatch[1]);
+      continue;
+    }
+
+    const listItem = getListItem(rawLine);
+    if (listItem && current) {
       segments.push(current.trim());
-      current = stripListPrefix(line);
+      current = pendingHeading ? `${pendingHeading}: ${listItem.text}` : listItem.text;
+      pendingHeading = '';
       continue;
     }
 
-    if (isListLine(line)) {
-      current = stripListPrefix(line);
+    if (listItem) {
+      current = pendingHeading ? `${pendingHeading}: ${listItem.text}` : listItem.text;
+      pendingHeading = '';
       continue;
     }
 
-    current = current ? `${current} ${line}` : line;
+    const line = normalizeInlineMarkdown(rawLine.replace(/^>\s?/, ''));
+    if (!line) continue;
+    const textWithHeading = pendingHeading ? `${pendingHeading}: ${line}` : line;
+    current = current ? `${current} ${textWithHeading}` : textWithHeading;
+    pendingHeading = '';
   }
 
-  if (current) {
-    segments.push(current.trim());
-  }
-
-  if (segments.length === 0) {
-    return [trimmed];
-  }
+  if (current) segments.push(current.trim());
+  if (pendingHeading) segments.push(pendingHeading);
 
   return segments;
 }
@@ -126,7 +181,7 @@ export function parseRecommendationItems(text: string): RecommendationItem[] {
 }
 
 export function extractAiBannerSnippet(executiveSummary: string): string {
-  const trimmed = executiveSummary.trim();
+  const trimmed = normalizeInsightText(executiveSummary).replace(/\n+/g, ' ').trim();
   if (!trimmed) return 'Awaiting AI insight synthesis from Monday.com data.';
 
   const firstSentence = trimmed.match(/^(.+?[.!?])(?:\s|$)/);

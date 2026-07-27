@@ -4,6 +4,7 @@ import { DashboardLayout } from './components/DashboardLayout';
 import { OverviewView } from './features/dashboard/views/OverviewView';
 import { AnalyticsView } from './features/dashboard/views/AnalyticsView';
 import { SettingsView } from './features/dashboard/views/SettingsView';
+import { ExecutiveAdvisorView } from './features/executive/views/ExecutiveAdvisorView';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,6 +28,8 @@ function App() {
                 return <AnalyticsView key="analytics" />;
               case 'settings':
                 return <SettingsView key="settings" />;
+              case 'advisor':
+                return <ExecutiveAdvisorView key="advisor" />;
               default:
                 return <OverviewView key="overview-default" />;
             }
