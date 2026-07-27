@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: analytics-bi
+
+monday:
+  api:
+    base-url: https://api.monday.com/v2
+    deals-board-id: ${MONDAY_DEALS_BOARD_ID:default_deals_id}
+    work-orders-board-id: ${MONDAY_WORK_ORDERS_BOARD_ID:default_work_orders_id}
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
